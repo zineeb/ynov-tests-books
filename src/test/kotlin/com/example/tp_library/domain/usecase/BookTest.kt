@@ -53,13 +53,13 @@ class BookTest : FunSpec ({
         result.shouldBeSortedBy { it.title }
     }
 
-    test("property testing - list of books returned contains all the elements of the sorted list"){
+    test("property testing - list of books returned contains all the elements of the sorted list") {
         checkAll(
             Arb.list(
                 Arb.bind(
                     Arb.string(minSize = 1),
                     Arb.string(minSize = 1),
-                ) { title, author -> Book(title, author)},
+                ) { title, author -> Book(title, author) },
                 range = 1..10
             )
         ) { book_list ->
