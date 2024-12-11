@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-test:
-    name: Build and Test
+    name: Build, Test, and Coverage
     runs-on: ubuntu-22.04
 
     steps:
@@ -29,21 +29,20 @@ jobs:
       - name: Ensure gradlew is executable
         run: chmod +x ./gradlew
 
-      # Étape 4 : Installer les dépendances
-      - name: Install dependencies
-        run: ./gradlew dependencies
+      # Étape 4 : Construire et tester l'application avec JaCoCo
+      - name: Build, Test, and Generate Coverage Report
+        run: ./gradlew clean test jacocoTestReport
 
-      # Étape 5 : Construire l'application
-      - name: Build application
-        run: ./gradlew build
-
-      # Étape 6 : Lancer les tests
-      - name: Run tests
-        run: ./gradlew test
-
-      # Étape 7 : Publier les résultats des tests
-      - name: Publish test results
+      # Étape 5 : Publier le rapport JaCoCo HTML
+      - name: Upload JaCoCo HTML Report
         uses: actions/upload-artifact@v3
         with:
-          name: test-results
-          path: build/test-results/test/
+          name: jacoco-coverage-report
+          path: build/reports/jacoco/test/html/
+
+      # Étape 6 : Publier le rapport JaCoCo XML (Optionnel)
+      - name: Upload JaCoCo XML Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: jacoco-xml-report
+          path: build/reports/jacoco/test/jacocoTestReport.xml
