@@ -1,0 +1,45 @@
+name: Kotlin CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      # Étape 1 : Récupérer le code source
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Étape 2 : Configurer JDK 21
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          distribution: temurin
+
+      # Étape 3 : Installer les dépendances (Gradle)
+      - name: Install dependencies
+        run: ./gradlew dependencies
+
+      # Étape 4 : Construire l'application
+      - name: Build application
+        run: ./gradlew build
+
+      # Étape 5 : Lancer les tests
+      - name: Run tests
+        run: ./gradlew test
+
+      # Étape 6 : Publier les résultats des tests
+      - name: Publish test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: build/test-results/test/
