@@ -11,7 +11,7 @@ on:
 jobs:
   build-and-test:
     name: Build and Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       # Étape 1 : Récupérer le code source
@@ -25,19 +25,23 @@ jobs:
           java-version: 21
           distribution: temurin
 
-      # Étape 3 : Installer les dépendances (Gradle)
+      # Étape 3 : Rendre gradlew exécutable
+      - name: Ensure gradlew is executable
+        run: chmod +x ./gradlew
+
+      # Étape 4 : Installer les dépendances
       - name: Install dependencies
         run: ./gradlew dependencies
 
-      # Étape 4 : Construire l'application
+      # Étape 5 : Construire l'application
       - name: Build application
         run: ./gradlew build
 
-      # Étape 5 : Lancer les tests
+      # Étape 6 : Lancer les tests
       - name: Run tests
         run: ./gradlew test
 
-      # Étape 6 : Publier les résultats des tests
+      # Étape 7 : Publier les résultats des tests
       - name: Publish test results
         uses: actions/upload-artifact@v3
         with:
