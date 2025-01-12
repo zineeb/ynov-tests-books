@@ -10,37 +10,37 @@ on:
 
 jobs:
   build-and-test:
-    name: Build, Test, and Coverage
+    name: Build, Test (Unit + Integration), and Coverage
     runs-on: ubuntu-22.04
 
     steps:
-      # Étape 1 : Récupérer le code source
+      # 1. Checkout
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Étape 2 : Configurer JDK 21
+      # 2. Setup JDK 21
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
           java-version: 21
           distribution: temurin
 
-      # Étape 3 : Rendre gradlew exécutable
+      # 3. Rendre gradlew exécutable (Linux/Mac)
       - name: Ensure gradlew is executable
         run: chmod +x ./gradlew
 
-      # Étape 4 : Construire et tester l'application avec JaCoCo
-      - name: Build, Test, and Generate Coverage Report
-        run: ./gradlew clean test jacocoTestReport
+      # 4. Construire + lancer test + testIntegration + générer JaCoCo
+      - name: Build and Coverage
+        run: ./gradlew clean build jacocoTestReport
 
-      # Étape 5 : Publier le rapport JaCoCo HTML
+      # 5. Publier l'HTML JaCoCo en artefact
       - name: Upload JaCoCo HTML Report
         uses: actions/upload-artifact@v3
         with:
-          name: jacoco-coverage-report
+          name: jacoco-html-report
           path: build/reports/jacoco/test/html/
 
-      # Étape 6 : Publier le rapport JaCoCo XML (Optionnel)
+      # 6. Publier le XML JaCoCo en artefact
       - name: Upload JaCoCo XML Report
         uses: actions/upload-artifact@v3
         with:
