@@ -38,7 +38,6 @@ class BookDAOTest(
 
     @BeforeAll
     fun setupSchema() {
-        // Création de la table "book" si elle n'existe pas
         jdbcTemplate.update(
             """
             CREATE TABLE IF NOT EXISTS book (

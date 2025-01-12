@@ -5,7 +5,6 @@ import com.example.tp_library.domain.port.BookRepository
 
 class BookCase(private val bookRepository: BookRepository) {
     fun addBook(book: Book) {
-        // Exemple : on déclenche l'exception si l'auteur est "BadAuthor"
         if (book.author == "BadAuthor") {
             throw BookDomainException("Author is blacklisted in domain logic")
         }

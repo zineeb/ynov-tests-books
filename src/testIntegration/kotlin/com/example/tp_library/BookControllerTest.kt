@@ -23,9 +23,7 @@ class BookControllerTest(@Autowired val mockMvc: MockMvc) {
 
     @Test
     fun `GET books should return list of books`() {
-        // On simule le domaine
         every { bookCase.listBooks() } returns listOf(
-            // On renvoie directement un domain Book, que le controller transforme en BookDTO
             com.example.tp_library.domain.model.Book("1984", "George Orwell")
         )
 
@@ -36,7 +34,6 @@ class BookControllerTest(@Autowired val mockMvc: MockMvc) {
                 jsonPath("$[0].author") { value("George Orwell") }
             }
 
-        // Vérifier que le domaine a bien été appelé
         verify(exactly = 1) { bookCase.listBooks() }
     }
 
@@ -52,14 +49,11 @@ class BookControllerTest(@Autowired val mockMvc: MockMvc) {
             content { string("Book added successfully!") }
         }
 
-        // Vérifier l'appel
         verify(exactly = 1) { bookCase.addBook(any()) }
     }
 
     @Test
     fun `POST books should return 400 for invalid input`() {
-        // Pas de mock, car on ne veut pas appeler le domaine si l'input est invalide
-        // -> "title" est vide -> IllegalArgumentException -> 400
         mockMvc.post("/books") {
             contentType = MediaType.APPLICATION_JSON
             content = """{"title": "", "author": "Unknown"}"""
@@ -70,7 +64,6 @@ class BookControllerTest(@Autowired val mockMvc: MockMvc) {
 
     @Test
     fun `domain error should return 422`() {
-        // On simule l'exception du domaine
         every { bookCase.addBook(any()) } throws BookDomainException("Author is blacklisted")
 
         mockMvc.post("/books") {

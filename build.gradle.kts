@@ -19,7 +19,6 @@ repositories {
     mavenCentral()
 }
 
-// 1) Déclarer le nouveau source set pour test d'intégration
 sourceSets {
     create("testIntegration") {
         kotlin.srcDirs("src/testIntegration/kotlin")
@@ -33,7 +32,6 @@ sourceSets {
     }
 }
 
-// 2) Configurer les configurations pour testIntegration
 configurations {
     val testIntegrationImplementation by getting {
         extendsFrom(configurations["implementation"])
@@ -68,14 +66,13 @@ dependencies {
     add("testIntegrationImplementation", "io.mockk:mockk:1.13.13")
     add("testIntegrationImplementation", "com.ninja-squad:springmockk:4.0.2")
 
-    // Testcontainers pour PostgreSQL et JUnit Jupiter
+    // --- Testcontainers pour PostgreSQL et JUnit Jupiter
     add("testIntegrationImplementation", "org.testcontainers:postgresql:1.19.0")
     add("testIntegrationImplementation", "org.testcontainers:junit-jupiter:1.19.0")
     add("testIntegrationImplementation", "org.testcontainers:jdbc:1.19.0")
 }
 
 
-// 4) Tâche pour exécuter testIntegration
 tasks.register<Test>("testIntegration") {
     description = "Runs integration tests in src/testIntegration/kotlin"
     group = "verification"
@@ -84,7 +81,6 @@ tasks.register<Test>("testIntegration") {
     useJUnitPlatform()
 }
 
-// 5) Configurer JaCoCo
 jacoco {
     toolVersion = "0.8.10"
 }
@@ -111,7 +107,6 @@ tasks.jacocoTestCoverageVerification {
     }
 }
 
-// 6) Inclure testIntegration dans la tâche build
 tasks.build {
     dependsOn("testIntegration")
 }

@@ -19,7 +19,6 @@ class BookController(private val bookCase: BookCase) {
 
     @PostMapping
     fun addBook(@RequestBody bookDTO: BookDTO): ResponseEntity<String> {
-        // On peut aussi tester le cas de titre/auteur vide
         val book = Book(bookDTO.title, bookDTO.author)
         bookCase.addBook(book)
         return ResponseEntity.ok("Book added successfully!")
@@ -27,7 +26,6 @@ class BookController(private val bookCase: BookCase) {
 
     @GetMapping("/domain-error")
     fun domainError(): ResponseEntity<String> {
-        // Exemple d'appel
         bookCase.addBook(Book("whatever", "BadAuthor"))
         return ResponseEntity.ok("Should never arrive here because of domain error")
     }

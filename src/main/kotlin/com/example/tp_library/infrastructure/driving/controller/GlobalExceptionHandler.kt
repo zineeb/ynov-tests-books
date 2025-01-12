@@ -10,13 +10,11 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(BookDomainException::class)
     fun handleDomain(ex: BookDomainException): ResponseEntity<String> {
-        // On choisit un code HTTP, ex. 422
         return ResponseEntity.unprocessableEntity().body("Domain error: ${ex.message}")
     }
 
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleIllegalArg(ex: IllegalArgumentException): ResponseEntity<String> {
-        // On renvoie 400 si un Book a un titre/auteur vide
         return ResponseEntity.badRequest().body(ex.message)
     }
 }

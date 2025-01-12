@@ -1,4 +1,3 @@
-// infrastructure/driven/postgres/BookDAO.kt
 package com.example.tp_library.infrastructure.driven.postgres
 
 import com.example.tp_library.domain.model.Book
@@ -22,7 +21,7 @@ class BookDAO(
 
     override fun findAll(): List<Book> {
         val sql = "SELECT title, author FROM book ORDER BY title"
-        val paramMap: Map<String, Any> = emptyMap() // <-- on spécifie ici
+        val paramMap: Map<String, Any> = emptyMap()
 
         return jdbcTemplate.query<Book>(sql, paramMap) { rs, _ ->
             val title = rs.getString("title")
