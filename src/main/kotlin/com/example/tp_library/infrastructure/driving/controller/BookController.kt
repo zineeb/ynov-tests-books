@@ -19,7 +19,10 @@ class BookController(private val bookCase: BookCase) {
 
     @PostMapping
     fun addBook(@RequestBody bookDTO: BookDTO): ResponseEntity<String> {
-        val book = Book(bookDTO.title, bookDTO.author)
+        if(bookDTO.title.isBlank()) {
+            return ResponseEntity.badRequest().body("Le titre ne peut pas être vide")
+        }
+        val book = Book(title = bookDTO.title, author = bookDTO.author)
         bookCase.addBook(book)
         return ResponseEntity.ok("Book added successfully!")
     }
