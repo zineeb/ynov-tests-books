@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-test:
-    name: Build, Test (Unit + Integration), and Coverage
+    name: Build, Test (Unit + Integration), Coverage, and Static Analysis
     runs-on: ubuntu-22.04
 
     steps:
@@ -29,20 +29,31 @@ jobs:
       - name: Ensure gradlew is executable
         run: chmod +x ./gradlew
 
-      # 4. Construire + lancer test + testIntegration + générer JaCoCo
-      - name: Build and Coverage
+      # 4. Lancer Detekt (Static Analysis)
+      - name: Run Detekt
+        run: ./gradlew detektCheck
+
+      # 5. Construire + tester + couverture
+      - name: Build, Test and Coverage
         run: ./gradlew clean build jacocoTestReport
 
-      # 5. Publier l'HTML JaCoCo en artefact
+      # 6. Publier le rapport JaCoCo
       - name: Upload JaCoCo HTML Report
         uses: actions/upload-artifact@v3
         with:
           name: jacoco-html-report
           path: build/reports/jacoco/test/html/
 
-      # 6. Publier le XML JaCoCo en artefact
+      # 7. Publier le rapport XML JaCoCo
       - name: Upload JaCoCo XML Report
         uses: actions/upload-artifact@v3
         with:
           name: jacoco-xml-report
           path: build/reports/jacoco/test/jacocoTestReport.xml
+
+      # 8. Publier le rapport Detekt
+      - name: Upload Detekt Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: detekt-report
+          path: build/reports/detekt/detekt.xml

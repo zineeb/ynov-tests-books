@@ -1,1 +1,1 @@
-rootProject.name = "tp_library"
+rootProject.name = "tpLibrary"
