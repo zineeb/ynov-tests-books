@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Repository
 
 @Repository
-class BookDAO(
+open class BookDAO(
     private val jdbcTemplate: NamedParameterJdbcTemplate
 ) : BookRepository {
 
@@ -23,10 +23,8 @@ class BookDAO(
         val sql = "SELECT title, author FROM book ORDER BY title"
         val paramMap: Map<String, Any> = emptyMap()
 
-        return jdbcTemplate.query<Book>(sql, paramMap) { rs, _ ->
-            val title = rs.getString("title")
-            val author = rs.getString("author")
-            Book(title, author)
+        return jdbcTemplate.query(sql, paramMap) { rs, _ ->
+            Book(rs.getString("title"), rs.getString("author"))
         }
     }
 }

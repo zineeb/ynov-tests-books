@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class UseCasesConfiguration {
+open class UseCasesConfiguration {
 
     @Bean
-    fun bookRepository(): BookRepository {
+    open fun bookRepository(): BookRepository {
         return object : BookRepository {
             private val books = mutableListOf<Book>()
 
@@ -25,7 +25,7 @@ class UseCasesConfiguration {
     }
 
     @Bean
-    fun bookCase(bookRepository: BookRepository): BookCase {
+    open fun bookCase(bookRepository: BookRepository): BookCase {
         return BookCase(bookRepository)
     }
 }

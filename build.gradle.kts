@@ -28,6 +28,15 @@ repositories {
 }
 
 sourceSets {
+    test {
+        kotlin.srcDirs("src/test/kotlin")
+    }
+    create("testIntegration") {
+        kotlin.srcDirs("src/testIntegration/kotlin")
+        resources.srcDirs("src/testIntegration/resources")
+        compileClasspath += sourceSets["main"].output + sourceSets["test"].output
+        runtimeClasspath += sourceSets["main"].output + sourceSets["test"].output
+    }
     create("testComponent") {
         kotlin.srcDirs("src/testComponent/kotlin")
         resources.srcDirs("src/testComponent/resources")
@@ -39,15 +48,6 @@ sourceSets {
         resources.srcDirs("src/testArchitecture/resources")
         compileClasspath += sourceSets["main"].output + sourceSets["test"].output
         runtimeClasspath += sourceSets["main"].output + sourceSets["test"].output
-    }
-    create("testIntegration") {
-        kotlin.srcDirs("src/testIntegration/kotlin")
-        resources.srcDirs("src/testIntegration/resources")
-        compileClasspath += sourceSets["main"].output + sourceSets["test"].output
-        runtimeClasspath += sourceSets["main"].output + sourceSets["test"].output
-    }
-    test {
-        kotlin.srcDirs("src/test/kotlin")
     }
 }
 
@@ -99,8 +99,11 @@ dependencies {
     add("testComponentImplementation", "io.cucumber:cucumber-junit-platform-engine:7.14.0")
     add("testComponentImplementation", "io.rest-assured:rest-assured:5.3.2")
     add("testComponentImplementation", "org.junit.platform:junit-platform-suite:1.10.0")
-    add("testComponentImplementation", "org.testcontainers:postgresql:1.19.1")
     add("testComponentImplementation", "io.kotest:kotest-assertions-core:5.9.1")
+    add("testComponentImplementation", "org.testcontainers:jdbc:1.19.0")
+    add("testComponentImplementation", "org.testcontainers:testcontainers:1.19.3")
+    add("testComponentImplementation", "org.testcontainers:postgresql:1.19.0")
+    add("testComponentImplementation", "org.testcontainers:junit-jupiter:1.19.0")
     add("testComponentImplementation", "org.testcontainers:jdbc:1.19.0")
 
     // Dépendances pour les tests d'architecture
@@ -122,6 +125,10 @@ configurations.all {
 
 tasks.named<ProcessResources>("processTestComponentResources") {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 tasks.register<Test>("testIntegration") {
@@ -148,10 +155,6 @@ tasks.register<Test>("testArchitecture") {
     useJUnitPlatform()
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
-
 detekt {
     toolVersion = "1.23.1"
     config.setFrom(files("$projectDir/config/detekt.yml"))  // Assure-toi que le chemin est correct
@@ -170,8 +173,12 @@ tasks.withType<io.gitlab.arturbosch.detekt.Detekt> {
     }
 }
 
+tasks.named("detekt") {
+    dependsOn(tasks.named("testArchitecture"))
+}
+
 tasks.build {
-    dependsOn("testIntegration", "testComponent", "testArchitecture")
+    dependsOn(tasks.test, tasks.named("testIntegration"), tasks.named("testComponent"), tasks.named("testArchitecture"), tasks.named("detekt"))
 }
 
 tasks.withType<Test> {
