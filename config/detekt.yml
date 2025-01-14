@@ -1,0 +1,18 @@
+build:
+  maxIssues: 10  # Fail the build if more than 10 issues are found
+  weights:
+    complexity: 2  # Complexity issues count as double
+    LongParameterList: 1  # Long parameter list counts as one issue
+
+complexity:
+  LongMethod:
+    active: true
+    threshold: 20  # Methods longer than 20 lines are considered too long
+
+style:
+  MagicNumber:
+    active: false  # Disable the MagicNumber rule
+
+naming:
+  PackageNaming:
+    active: false
