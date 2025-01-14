@@ -10,48 +10,44 @@ on:
 
 jobs:
   build-and-test:
-    name: Build, Test (Unit + Integration), Coverage, and Static Analysis
+    name: Build, Test, Coverage, and Static Analysis
     runs-on: ubuntu-22.04
 
     steps:
-      # 1. Checkout
+      # 1. Checkout du code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Setup JDK 21
+      # 2. Configuration de JDK 21
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
           java-version: 21
           distribution: temurin
 
-      # 3. Rendre gradlew exécutable (Linux/Mac)
+      # 3. Making gradlew executable
       - name: Ensure gradlew is executable
         run: chmod +x ./gradlew
 
-      # 4. Lancer Detekt (Static Analysis)
-      - name: Run Detekt
-        run: ./gradlew detektCheck
+      # 4. Execute complete build including all tests, coverage and static analysis
+      - name: Build, Test, Coverage and Static Analysis
+        run: ./gradlew clean build --refresh-dependencies
 
-      # 5. Construire + tester + couverture
-      - name: Build, Test and Coverage
-        run: ./gradlew clean build jacocoTestReport
-
-      # 6. Publier le rapport JaCoCo
+      # 5. Publish JaCoCo HTML report
       - name: Upload JaCoCo HTML Report
         uses: actions/upload-artifact@v3
         with:
           name: jacoco-html-report
           path: build/reports/jacoco/test/html/
 
-      # 7. Publier le rapport XML JaCoCo
+      # 6. Publier le rapport JaCoCo XML
       - name: Upload JaCoCo XML Report
         uses: actions/upload-artifact@v3
         with:
           name: jacoco-xml-report
           path: build/reports/jacoco/test/jacocoTestReport.xml
 
-      # 8. Publier le rapport Detekt
+      # 7. Publish the Detekt report
       - name: Upload Detekt Report
         uses: actions/upload-artifact@v3
         with:
