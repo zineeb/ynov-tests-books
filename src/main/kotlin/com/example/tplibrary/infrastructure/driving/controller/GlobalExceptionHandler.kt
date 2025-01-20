@@ -5,6 +5,9 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
+/**
+ * Global exception handling for Book-related domain and validation errors.
+ */
 @RestControllerAdvice
 class GlobalExceptionHandler {
 

@@ -16,12 +16,11 @@ class CucumberSpringConfiguration {
     companion object {
         @JvmStatic
         @Container
-        val postgreSQLContainer = PostgreSQLContainer<Nothing>("postgres:15.3-alpine")
-            .apply {
-                withDatabaseName("testdb")
-                withUsername("testuser")
-                withPassword("testpass")
-            }
+        val postgreSQLContainer = PostgreSQLContainer<Nothing>("postgres:15.3-alpine").apply {
+            withDatabaseName("testdb")
+            withUsername("testuser")
+            withPassword("testpass")
+        }
 
         @JvmStatic
         @DynamicPropertySource

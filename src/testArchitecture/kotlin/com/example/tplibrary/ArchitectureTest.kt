@@ -5,6 +5,9 @@ import com.tngtech.archunit.core.importer.ClassFileImporter
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes
 import org.junit.jupiter.api.*
 
+/**
+ * Architecture tests verifying package dependency rules.
+ */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ArchitectureTest {
     private val basePackage = "com.example.tplibrary"
@@ -33,8 +36,8 @@ class ArchitectureTest {
                 "org.springframework..",
                 "java..",
                 "javax..",
-                "kotlin..", // Ajouté pour Kotlin
-                "org.jetbrains.annotations.." // Ajouté pour Kotlin Annotations
+                "kotlin..",
+                "org.jetbrains.annotations.."
             )
         rule.check(classes)
     }

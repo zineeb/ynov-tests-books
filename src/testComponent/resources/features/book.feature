@@ -4,17 +4,13 @@ Fonctionnalité: Gestion des livres
   Je souhaite gérer les livres
   Afin de les ajouter et les consulter
 
-  Scénario: Créer un livre valide
-    Étant donné un livre avec le titre "Le Petit Prince" et l'auteur "Antoine de Saint-Exupéry"
+  Scénario: Réserver un livre déjà réservé
+    Étant donné un livre avec le titre "Titre Double" et l'auteur "Auteur Double"
     Quand je crée le livre
     Alors le livre est ajouté avec succès
 
-  Scénario: Créer un livre sans titre
-    Étant donné un livre avec le titre "" et l'auteur "Inconnu"
-    Quand je crée le livre
-    Alors une erreur indiquant "Le titre ne peut pas être vide" est renvoyée
+    Quand je réserve le livre avec le titre "Titre Double"
+    Alors le livre est réservé avec succès
 
-  Scénario: Lister les livres
-    Étant donné une collection de livres existante
-    Quand je demande la liste des livres
-    Alors la liste des livres est renvoyée triée par titre
+    Quand je réserve le livre avec le titre "Titre Double"
+    Alors une erreur de domaine indiquant "Book is already reserved" est renvoyée

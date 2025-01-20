@@ -2,11 +2,9 @@ name: Kotlin CI/CD
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   build-and-test:
@@ -14,40 +12,40 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      # 1. Checkout du code
+      # 1. Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Configuration de JDK 21
+      # 2. Set up JDK 21
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
           java-version: 21
           distribution: temurin
 
-      # 3. Making gradlew executable
+      # 3. Make gradlew executable
       - name: Ensure gradlew is executable
         run: chmod +x ./gradlew
 
-      # 4. Execute complete build including all tests, coverage and static analysis
+      # 4. Run build, tests (including coverage), and static analysis
       - name: Build, Test, Coverage and Static Analysis
         run: ./gradlew clean build --refresh-dependencies
 
-      # 5. Publish JaCoCo HTML report
+      # 5. Upload JaCoCo HTML report
       - name: Upload JaCoCo HTML Report
         uses: actions/upload-artifact@v3
         with:
           name: jacoco-html-report
           path: build/reports/jacoco/test/html/
 
-      # 6. Publier le rapport JaCoCo XML
+      # 6. Upload JaCoCo XML report
       - name: Upload JaCoCo XML Report
         uses: actions/upload-artifact@v3
         with:
           name: jacoco-xml-report
           path: build/reports/jacoco/test/jacocoTestReport.xml
 
-      # 7. Publish the Detekt report
+      # 7. Upload Detekt report
       - name: Upload Detekt Report
         uses: actions/upload-artifact@v3
         with:

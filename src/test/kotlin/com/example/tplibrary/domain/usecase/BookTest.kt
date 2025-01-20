@@ -16,6 +16,7 @@ import io.mockk.mockk
 import io.mockk.verify
 
 class BookTest : FunSpec({
+
     test("should create a book with valid title and author") {
         val book = Book(title = "Test Book", author = "Test Author")
         book.title shouldBe "Test Book"
@@ -34,6 +35,7 @@ class BookTest : FunSpec({
         }.message shouldBe "Author must not be blank"
     }
 
+    // Mocks for repository-based tests
     val repository = mockk<BookRepository>(relaxed = true)
     val useCase = BookCase(repository)
 
@@ -49,11 +51,12 @@ class BookTest : FunSpec({
             Book(title = "Clean Code", author = "Robert Martin")
         )
         every { repository.findAll() } returns books
+
         val result = useCase.listBooks()
         result.shouldBeSortedBy { it.title }
     }
 
-    test("property testing - list of books returned contains all the elements of the sorted list") {
+    test("property testing - list of books returned is sorted by title") {
         checkAll(
             Arb.list(
                 Arb.bind(
@@ -62,12 +65,12 @@ class BookTest : FunSpec({
                 ) { title, author -> Book(title, author) },
                 range = 1..10
             )
-        ) { book_list ->
-            every { repository.findAll() } returns book_list
-            val result = useCase.listBooks()
+        ) { bookList ->
+            every { repository.findAll() } returns bookList
 
-            result.size shouldBe book_list.size
-            result shouldBe book_list.sortedBy { it.title }
+            val result = useCase.listBooks()
+            result.size shouldBe bookList.size
+            result shouldBe bookList.sortedBy { it.title }
         }
     }
 })
